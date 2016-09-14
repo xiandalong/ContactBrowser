@@ -1,7 +1,9 @@
 package com.example.xiandalong.contactbrowser;
 
 
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
@@ -12,8 +14,10 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 
 /**
@@ -36,11 +40,12 @@ public class ContactsFragment extends Fragment {
                             ContactsContract.CommonDataKinds.Phone.NUMBER};
                     // Construct the loader
                     CursorLoader cursorLoader = new CursorLoader(getActivity(),
-                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI, // URI
-                            projectionFields, // projection fields
-                            null, // the selection criteria
-                            null, // the selection args
-                            null // the sort order
+                                                                 ContactsContract.CommonDataKinds.Phone.CONTENT_URI,// URI
+                                                                 projectionFields,// projection fields
+                                                                 null,// the selection criteria
+                                                                 null,// the selection args
+                                                                 "DISPLAY_NAME ASC"
+                                                                 // the sort order
                     );
                     // Return the loader for use
                     return cursorLoader;
@@ -77,6 +82,19 @@ public class ContactsFragment extends Fragment {
         // Find list and bind to adapter
         ListView lvContacts = (ListView) rootView.findViewById(R.id.contact_list);
         lvContacts.setAdapter(adapter);
+        lvContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                TextView numberTextView = (TextView) view.findViewById(R.id.number_text_view);
+                String phoneNumber = numberTextView.getText().toString();
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + phoneNumber));
+                startActivity(intent);
+            }
+        });
+
+
 
         return rootView;
     }
@@ -86,7 +104,6 @@ public class ContactsFragment extends Fragment {
         // Column data from cursor to bind views from
         String[] uiBindFrom = {ContactsContract.Contacts.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Phone.NUMBER};
-//        Log.v("ContactsFragment",uiBindFrom[0] + " + " +uiBindFrom[1]);
         // View IDs which will have the respective column data inserted
         int[] uiBindTo = {R.id.name_text_view,
                 R.id.number_text_view};

@@ -18,6 +18,6 @@
         </activity>
     </application>
 
+    <!--grant permission to read from contacts-->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
 </manifest>
