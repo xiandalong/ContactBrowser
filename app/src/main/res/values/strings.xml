@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ContactBrowser</string>
+    <string name="sort_order">ASC</string>
 </resources>
