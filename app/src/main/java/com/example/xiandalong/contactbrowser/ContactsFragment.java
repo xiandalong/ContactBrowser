@@ -23,8 +23,13 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class ContactsFragment extends Fragment {
+    @BindView(R.id.contact_list)
+    ListView lvContacts;
 
     public static final int CONTACT_LOADER_ID = 78;
     public static final String QUERY_TEXT = "Query Text";
@@ -38,11 +43,11 @@ public class ContactsFragment extends Fragment {
 
         setHasOptionsMenu(true);
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        ButterKnife.bind(this, rootView);
         setupCursorAdapter();
         setupContactsLoader();
         getActivity().getSupportLoaderManager().initLoader(CONTACT_LOADER_ID,
                 new Bundle(), contactsLoader);
-        ListView lvContacts = (ListView) rootView.findViewById(R.id.contact_list);
         setupContactsListView(lvContacts);
 
         return rootView;
@@ -84,10 +89,12 @@ public class ContactsFragment extends Fragment {
     private void setupContactsListView(ListView lvContacts) {
         lvContacts.setAdapter(adapter);
         lvContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @BindView(R.id.number_text_view)
+            TextView numberTextView;
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                TextView numberTextView = (TextView) view.findViewById(R.id.number_text_view);
+                ButterKnife.bind(this, view);
                 String phoneNumber = numberTextView.getText().toString();
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:" + phoneNumber));
